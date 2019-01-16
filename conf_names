@@ -6,6 +6,7 @@ Altair BASIC
 Assembly
 BASIC
 BeanShell
+Bug
 C
 C#
 C++
@@ -19,6 +20,8 @@ Curl
 Curry
 DarkBASIC
 Dart
+Databases
+Debug
 Dylan
 EuLisp
 F
@@ -54,9 +57,12 @@ Reia
 Ruby
 Rust
 Scala
+Security
 SGML
 Simula
 SQL
+SQL injection
+StackOverflow
 Stanford LISP
 Swift
 Turbo Pascal
@@ -68,5 +74,6 @@ WML
 WHTML
 XLISP
 XML
+XSS
 YAML
 ZetaLisp
