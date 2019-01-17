@@ -15,12 +15,25 @@ class Conference:
         self.max_participants = max_participants
         self.student_discount = student_discount
 
+    def __str__(self):
+        return '(' + str(self.id) + ', ' + '\'' + self.name + '\', ' + 'CAST(\'' + str(self.date_begin) + '\' AS smalldatetime), CAST(\'' + str(self.date_end) + '\' AS smalldatetime), ' + str(self.cost) + ', ' + str(self.max_participants) + ', ' + str(self.student_discount) + '),'
+
 class Discount:
     def __init__(self, conf_id, discount, date_begin, date_end):
         self.conf_id = conf_id
         self.discount = discount
         self.date_begin = date_begin
         self.date_end = date_end
+
+class workshop_info:
+    def __init__(self, id, name, max_parts):
+        self.id = id
+        self.name = name
+        self.desc = 'Lorem ipsum dolor sit amet.'
+        self.max_pars = max_parts
+
+    def __str__(self):
+        return '(' + str(self.id) + ', \'' + self.name + '\', \'' + self.desc + '\', ' + str(self.max_pars) + '),'
 
 def generate_conferences():
     conferences = []
@@ -58,7 +71,33 @@ def generate_discounts(conference):
         discounts.append(Discount(conf_id, round(discount, 2), date_begin, date_end))
     return discounts
 
+def generate_workshop_info(id, conf_name):
+    workshops = []
+    for i in range(4):
+        if i == 0:
+            name = conf_name.replace('Conference', 'Entry-level')
+        elif i == 1:
+            name = conf_name.replace('Conference', 'Beginner')
+        elif i == 2:
+            name = conf_name.replace('Conference', 'Advanced')
+        elif i == 3:
+            name = conf_name.replace('Conference', 'Master')
+        max_parts = randint(2, 4) * 5
+        workshops.append(workshop_info(id + i, name, max_parts))
+    return workshops
+
+
+
+
 if __name__ == "__main__":
     #Conferences
     confs = generate_conferences()
-    
+    with open('fill_workshopinfo.sql', 'a') as outfile:
+        i = 0
+        for conf in confs:
+            workshops = generate_workshop_info(i, conf.name)
+            for w in workshops:
+                outfile.write(str(w) + '\n')
+            i += 4
+
+
