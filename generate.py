@@ -61,15 +61,18 @@ class Workshop:
     def __str__(self):
         return '(' + str(self.workshop_id) + ', ' + str(self.confday_id) + ', ' + 'CAST(\'' + str(self.date_begin) + '\' AS smalldatetime), CAST(\'' + str(self.date_end) + '\' AS smalldatetime), ' + str(self.cost) + '),'
 
-class reservation():
+class Reservation():
     def __init__(self, id, client, payment, reservation):
         self.id = id
-        self.client_id = id
+        self.client_id = client
         self.payment_date = payment
         self.reservation_date = reservation
 
     def __str__(self):
+        if self.payment_date == 'null':
+            return '(' + str(self.client_id) + ', null, CAST(\'' + str(self.reservation_date) + '\' AS smalldatetime),'
         return '(' + str(self.client_id) + ', ' + 'CAST(\'' + str(self.payment_date) + '\' AS smalldatetime), CAST(\'' + str(self.reservation_date) + '\' AS smalldatetime),'
+
 def generate_conferences():
     conferences = []
     with open('conf_names', 'r') as infile:
@@ -142,11 +145,16 @@ def generate_workshop(id, conf, conf_day):
         id += 1
     return workshops, id
 
-def generate_reservation(id, conf_day):
-
-    client_id = randint(0, 999)
-    reservation_date = conf_day.day - timedelta(days=randint(10, 90))
-    payment_date =  reservation_date + timedelta(days=randint(1,7)) if randint(0, 1) else 'null'
+def generate_reservation(id, conf, conf_day):
+    reservations = []
+    no_of_reservations = int(conf.max_participants * randint(5,9)*0.1)
+    for i in range(no_of_reservations):
+        client_id = randint(0, 999)
+        reservation_date = conf_day.day - timedelta(days=randint(10, 90))
+        payment_date =  reservation_date + timedelta(days=randint(1,7)) if randint(0, 1) else 'null'
+        reservations.append(Reservation(id, client_id, payment_date, reservation_date))
+        id += 1
+    return reservations, id
 
 
 def generate():
@@ -165,21 +173,27 @@ def generate():
                 out_days.write('INSERT INTO ConferenceDay (Conferences_id, day)\nVALUES\n')
                 with open('fill_workshops.sql', 'w') as out_workshops:
                     out_workshops.write('INSERT INTO Workshop (Workshopinformation_id, ConferenceDay_id, date_begin, date_end, cost)\nVALUES\n')
-                    disc_id = 0
-                    days_id = 0
-                    workshop_id = 0
-                    for c in confs:
+                    with open('fill_reservations.sql', 'w') as out_reservations:
+                        out_reservations.write('INSERT INTO Reservation (Client_id, paymentDate, reservationDate)\nVALUES\n')
+                        disc_id = 0
+                        days_id = 0
+                        workshop_id = 0
+                        reservation_id = 0
+                        for c in confs:
 
-                        discounts, disc_id = generate_discounts(disc_id, c)
-                        days, days_id = generate_conf_days(days_id, c)
-                        out_confs.write(str(c) + '\n')
-                        for d in discounts:
-                            out_discounts.write(str(d) + '\n')
-                        for d in days:
-                            out_days.write(str(d) + '\n')
-                            workshops, workshop_id = generate_workshop(workshop_id, c, d)
-                            for w in workshops:
-                                out_workshops.write(str(w)+ '\n')
+                            discounts, disc_id = generate_discounts(disc_id, c)
+                            days, days_id = generate_conf_days(days_id, c)
+                            out_confs.write(str(c) + '\n')
+                            for d in discounts:
+                                out_discounts.write(str(d) + '\n')
+                            for d in days:
+                                out_days.write(str(d) + '\n')
+                                workshops, workshop_id = generate_workshop(workshop_id, c, d)
+                                reservations, reservation_id = generate_reservation(reservation_id, c, d)
+                                for r in reservations:
+                                    out_reservations.write(str(r) + '\n')
+                                for w in workshops:
+                                    out_workshops.write(str(w)+ '\n')
 
 if __name__ == "__main__":
     # with open('fill_student.sql', 'w') as out_student:

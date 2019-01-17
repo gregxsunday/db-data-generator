@@ -1,4 +1,4 @@
-INSERT INTO InfividualParticipant (additionalinformation)
+INSERT INTO InfividualParticipant (id, additionalinformation)
 VALUES
 ( 'Lorem ipsum dolor sit amet.'),
 ( 'Lorem ipsum dolor sit amet.'),
