@@ -1,12 +1,12 @@
- INSERT INTO CITY (id, name, Country_id)
+ INSERT INTO CITY (name, Country_id)
  VALUES
- (1, 'Wodzierady', 0),                                                                     (2, 'Łąck', 0),                                                                           (3, 'Tuchola', 0),                                                                        (4, 'Wydminy', 0),                                                                        (5, 'Niedzica', 0),                                                                       (6, 'Wilga', 0),                                                                          (7, 'Głowno', 0),                                                                         (8, 'Przybiernów', 0),                                                                    (9, 'Radzanów', 0),                                                                       (10, 'Pyzdry', 0),                                                                        (11, 'Czeremcha', 0),                                                                     (12, 'Sępólno Krajeńskie', 0),                                                            (13, 'Bystra', 0),                                                                        (14, 'Przewóz', 0),                                                                       (15, 'Pisz', 0),                                                                          (16, 'Dębe Wielkie', 0),                                                                  (17, 'Bielawy', 0),                                                                       (18, 'Jaworze', 0),                                                                       (19, 'Purda', 0),                                                                         (20, 'Białobrzegi', 0),
-(21, 'Herne', 1),
-(22, 'Düsseldorf', 1),
-(23, 'Hannover', 1);
-(24, 'Uherské Hradiště', 2),
-(25, 'Měcholupy', 2),
-(26, 'Suponevo', 3),
-(27, 'Rasskazovo', 3),
-(28, 'Mosypne', 4),
-(29, 'Milove', 4);
+ ('Wodzierady', 0),                                                                     ('Łąck', 0),                                                                           ('Tuchola', 0),                                                                        ('Wydminy', 0),                                                                        ('Niedzica', 0),                                                                       ('Wilga', 0),                                                                          ('Głowno', 0),                                                                         ('Przybiernów', 0),                                                                    ('Radzanów', 0),                                                                       ( 'Pyzdry', 0),                                                                        ('Czeremcha', 0),                                                                     ('Sępólno Krajeńskie', 0),                                                            ('Bystra', 0),                                                                        ('Przewóz', 0),                                                                       ('Pisz', 0),                                                                          ('Dębe Wielkie', 0),                                                                  ('Bielawy', 0),                                                                       ( 'Jaworze', 0),                                                                       ( 'Purda', 0),                                                                         ( 'Białobrzegi', 0),
+( 'Herne', 1),
+( 'Düsseldorf', 1),
+( 'Hannover', 1);
+( 'Uherské Hradiště', 2),
+( 'Měcholupy', 2),
+( 'Suponevo', 3),
+( 'Rasskazovo', 3),
+( 'Mosypne', 4),
+( 'Milove', 4);

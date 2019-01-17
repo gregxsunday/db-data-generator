@@ -17,7 +17,7 @@ class Conference:
         self.student_discount = student_discount
 
     def __str__(self):
-        return '(' + str(self.id) + ', ' + str(self.addr_id) + ', \'' + self.name + '\', ' + 'CAST(\'' + str(self.date_begin) + '\' AS smalldatetime), CAST(\'' + str(self.date_end) + '\' AS smalldatetime), ' + str(self.cost) + ', ' + str(self.max_participants) + ', ' + str(self.student_discount) + '),'
+        return '(' + str(self.addr_id) + ', \'' + self.name + '\', ' + 'CAST(\'' + str(self.date_begin) + '\' AS smalldatetime), CAST(\'' + str(self.date_end) + '\' AS smalldatetime), ' + str(self.cost) + ', ' + str(self.max_participants) + ', ' + str(self.student_discount) + '),'
 
 class Discount:
     def __init__(self, id, conf_id, discount, date_begin, date_end):
@@ -28,7 +28,7 @@ class Discount:
         self.date_end = date_end
 
     def __str__(self):
-        return '( ' + str(self.id) + ', ' + str(self.conf_id) + ', ' + str(self.discount) + ', CAST(\'' + str(self.date_begin) + '\' AS smalldatetime), CAST(\'' + str(self.date_end) + '\' AS smalldatetime)),'
+        return '( ' + str(self.conf_id) + ', ' + str(self.discount) + ', CAST(\'' + str(self.date_begin) + '\' AS smalldatetime), CAST(\'' + str(self.date_end) + '\' AS smalldatetime)),'
 
 class workshop_info:
     def __init__(self, id, name, max_parts):
@@ -38,7 +38,7 @@ class workshop_info:
         self.max_pars = max_parts
 
     def __str__(self):
-        return '(' + str(self.id) + ', \'' + self.name + '\', \'' + self.desc + '\', ' + str(self.max_pars) + '),'
+        return '( \'' + self.name + '\', \'' + self.desc + '\', ' + str(self.max_pars) + '),'
 
 class ConferenceDay:
     def __init__(self, id, conf_id, day):
@@ -47,7 +47,7 @@ class ConferenceDay:
         self.day = day
 
     def __str__(self):
-        return '( ' + str(self.id) + ', ' + str(self.conf_id) + ', CAST(\'' + str(self.day) + '\' AS date),'
+        return '( ' + str(self.conf_id) + ', CAST(\'' + str(self.day) + '\' AS date),'
 
 class Workshop:
     def __init__(self, id, workshop_id, confday_id, date_b, date_e, cost):
@@ -59,8 +59,17 @@ class Workshop:
         self.cost = cost
 
     def __str__(self):
-        return '(' + str(self.id) + ', ' + str(self.workshop_id) + ', ' + str(self.confday_id) + ', ' + 'CAST(\'' + str(self.date_begin) + '\' AS smalldatetime), CAST(\'' + str(self.date_end) + '\' AS smalldatetime), ' + str(self.cost) + '),'
+        return '(' + str(self.workshop_id) + ', ' + str(self.confday_id) + ', ' + 'CAST(\'' + str(self.date_begin) + '\' AS smalldatetime), CAST(\'' + str(self.date_end) + '\' AS smalldatetime), ' + str(self.cost) + '),'
 
+class reservation():
+    def __init__(self, id, client, payment, reservation):
+        self.id = id
+        self.client_id = id
+        self.payment_date = payment
+        self.reservation_date = reservation
+
+    def __str__(self):
+        return '(' + str(self.client_id) + ', ' + 'CAST(\'' + str(self.payment_date) + '\' AS smalldatetime), CAST(\'' + str(self.reservation_date) + '\' AS smalldatetime),'
 def generate_conferences():
     conferences = []
     with open('conf_names', 'r') as infile:
@@ -133,20 +142,34 @@ def generate_workshop(id, conf, conf_day):
         id += 1
     return workshops, id
 
+def generate_reservation(id, conf_day):
+
+    client_id = randint(0, 999)
+    reservation_date = conf_day.day - timedelta(days=randint(10, 90))
+    payment_date =  reservation_date + timedelta(days=randint(1,7)) if randint(0, 1) else 'null'
+
+
 def generate():
     confs = generate_conferences()
+    with open('fill_workshopinfo.sql', 'w') as out:
+        out.write('INSERT INTO Workshopinformation (name, description, maximumParticipants)\nVALUES\n')
+        for c in confs:
+            for w in generate_workshop_info(0, c.name):
+                out.write(str(w) + '\n')
+
     with open('fill_conferences.sql', 'w') as out_confs:
-        out_confs.write('INSERT INTO Conferences (id, Address_id, name, date_begin, date_end, cost, maximumParticipants, studentDiscount)\nVALUES\n')
+        out_confs.write('INSERT INTO Conferences (Address_id, name, date_begin, date_end, cost, maximumParticipants, studentDiscount)\nVALUES\n')
         with open('fill_discounts.sql', 'w') as out_discounts:
-            out_discounts.write('INSERT INTO CostDiscount (id, Conference_id, discount, date_begin, date_end)\nVALUES\n')
+            out_discounts.write('INSERT INTO CostDiscount (Conference_id, discount, date_begin, date_end)\nVALUES\n')
             with open('fill_days.sql', 'w') as out_days:
-                out_days.write('INSERT INTO ConferenceDay (id, Conferences_id, day)\nVALUES\n')
+                out_days.write('INSERT INTO ConferenceDay (Conferences_id, day)\nVALUES\n')
                 with open('fill_workshops.sql', 'w') as out_workshops:
-                    out_workshops.write('INSERT INTO Workshop (id, Workshopinformation_id, ConferenceDay_id, date_begin, date_end, cost)\nVALUES\n')
+                    out_workshops.write('INSERT INTO Workshop (Workshopinformation_id, ConferenceDay_id, date_begin, date_end, cost)\nVALUES\n')
                     disc_id = 0
                     days_id = 0
                     workshop_id = 0
                     for c in confs:
+
                         discounts, disc_id = generate_discounts(disc_id, c)
                         days, days_id = generate_conf_days(days_id, c)
                         out_confs.write(str(c) + '\n')
@@ -162,12 +185,13 @@ if __name__ == "__main__":
     # with open('fill_student.sql', 'w') as out_student:
     #     out_student.write('INSERT INTO Student (id, cardNumber)\nVALUES\n')
     #     for i in range(0, 1000, 3):
-    #         out_student.write('( ' + str(i) + ', ' + str(randint(100000, 999999)) + '),\n')
-    # with open('fill_individual.sql', 'w') as out_ind:
-    #     out_ind.write('INSERT INTO InfividualParticipant (id, additionalinformation)\nVALUES\n')
-    #     for i in range(1, 1000, 3):
-    #         out_ind.write('( ' + str(i) + ', \'Lorem ipsum dolor sit amet.\'),\n')
-    with open('fill_cmp.sql', 'w') as out_cmp:
-        out_cmp.write('INSERT INTO CompanyParticipant (id, Company_id)\nVALUES\n')
-        for i in range(2, 1000, 3):
-            out_cmp.write('( ' + str(i) + ', ' + str(randint(1, 100)) + '),\n')
+    #         out_student.write('( ' + str(randint(100000, 999999)) + '),\n')
+    with open('fill_individual.sql', 'w') as out_ind:
+        out_ind.write('INSERT INTO InfividualParticipant (id, additionalinformation)\nVALUES\n')
+        for i in range(1, 1000, 3):
+            out_ind.write('( ' + '\'Lorem ipsum dolor sit amet.\'),\n')
+    # with open('fill_cmp.sql', 'w') as out_cmp:
+    #     out_cmp.write('INSERT INTO CompanyParticipant (id, Company_id)\nVALUES\n')
+    #     for i in range(2, 1000, 3):
+    #         out_cmp.write('( ' + str(i) + ', ' + str(randint(1, 100)) + '),\n')
+    generate()
