@@ -35,6 +35,14 @@ class workshop_info:
     def __str__(self):
         return '(' + str(self.id) + ', \'' + self.name + '\', \'' + self.desc + '\', ' + str(self.max_pars) + '),'
 
+class ConferenceDay:
+    def __init__(self, id, conf_id, day):
+        self.id = id
+        self.conf_id = conf_id
+        self.day = day
+
+
+
 def generate_conferences():
     conferences = []
     with open('conf_names', 'r') as infile:
@@ -92,12 +100,55 @@ def generate_workshop_info(id, conf_name):
 if __name__ == "__main__":
     #Conferences
     confs = generate_conferences()
-    with open('fill_workshopinfo.sql', 'a') as outfile:
-        i = 0
-        for conf in confs:
-            workshops = generate_workshop_info(i, conf.name)
-            for w in workshops:
-                outfile.write(str(w) + '\n')
-            i += 4
-
+    # with open('fill_workshopinfo.sql', 'a') as outfile:
+    #     i = 0
+    #     for conf in confs:
+    #         workshops = generate_workshop_info(i, conf.name)
+    #         for w in workshops:
+    #             outfile.write(str(w) + '\n')
+    #         i += 4
+    streets = '''2559 West Place
+74 Valley Edge Road
+39 Knutson Road
+02 Crownhardt Lane
+999 Blaine Alley
+53412 Londonderry Park
+0505 Esch Alley
+8782 Springview Pass
+725 Dwight Place
+1 Sutherland Court
+98898 Center Pass
+0535 Shopko Avenue
+37723 Grasskamp Circle
+356 Donald Point
+9 Cherokee Avenue
+4 Forest Alley
+706 Helena Pass
+64 Arapahoe Pass
+6406 Reinke Terrace
+8 Debs Alley
+662 Delaware Junction
+427 Roth Terrace
+0 Daystar Point
+43 Westridge Junction
+55 Hermina Junction
+3 Holy Cross Plaza
+39 Vidon Lane
+42155 School Street
+6 Farwell Road
+0 Talmadge Way
+3 Melby Parkway
+25 Bellgrove Center
+1 Hoffman Drive
+5 Messerschmidt Crossing
+9 Esker Avenue
+8 Nevada Park
+20 Oneill Hill
+1 Spohn Center
+639 Daystar Terrace
+3 Independence Terrace'''
+    i = 0
+    for street in streets.split('\n'):
+        print('(' + str(i) + ', ' + str(randint(0, 29)) + ', \'' + street + '\'),')
+        i += 1
 
