@@ -1,12 +1,12 @@
  INSERT INTO CITY (name, Country_id)
  VALUES
- ('Wodzierady', 0),                                                                     ('艁膮ck', 0),                                                                           ('Tuchola', 0),                                                                        ('Wydminy', 0),                                                                        ('Niedzica', 0),                                                                       ('Wilga', 0),                                                                          ('G艂owno', 0),                                                                         ('Przybiern贸w', 0),                                                                    ('Radzan贸w', 0),                                                                       ( 'Pyzdry', 0),                                                                        ('Czeremcha', 0),                                                                     ('S臋p贸lno Kraje艅skie', 0),                                                            ('Bystra', 0),                                                                        ('Przew贸z', 0),                                                                       ('Pisz', 0),                                                                          ('D臋be Wielkie', 0),                                                                  ('Bielawy', 0),                                                                       ( 'Jaworze', 0),                                                                       ( 'Purda', 0),                                                                         ( 'Bia艂obrzegi', 0),
-( 'Herne', 1),
-( 'D眉sseldorf', 1),
-( 'Hannover', 1);
-( 'Uhersk茅 Hradi拧t臎', 2),
-( 'M臎cholupy', 2),
-( 'Suponevo', 3),
-( 'Rasskazovo', 3),
-( 'Mosypne', 4),
-( 'Milove', 4);
+ ('Wodzierady', 1),                                                                     ('９ck', 1),                                                                           ('Tuchola', 1),                                                                        ('Wydminy', 1),                                                                        ('Niedzica', 1),                                                                       ('Wilga', 1),                                                                          ('G硂wno', 1),                                                                         ('Przybiern體', 1),                                                                    ('Radzan體', 1),                                                                       ( 'Pyzdry', 1),                                                                        ('Czeremcha', 1),                                                                     ('S阷髄no Kraje駍kie', 1),                                                            ('Bystra', 1),                                                                        ('Przew髗', 1),                                                                       ('Pisz', 1),                                                                          ('D阞e Wielkie', 1),                                                                  ('Bielawy', 1),                                                                       ( 'Jaworze', 1),                                                                       ( 'Purda', 1),                                                                         ( 'Bia硂brzegi', 1),
+( 'Herne', 2),
+( 'D黶seldorf', 2),
+( 'Hannover', 2),
+( 'Uherske Hradiste', 3),
+( 'M靋holupy', 3),
+( 'Suponevo', 4),
+( 'Rasskazovo', 4),
+( 'Mosypne', 5),
+( 'Milove', 5);

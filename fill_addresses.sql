@@ -1,4 +1,6 @@
-INSERT INTO Addresses (City_id, address)
+DBCC CHECKIDENT (Address, RESEED, 0)
+
+INSERT INTO Address (City_id, address)
 VALUES
 (24, '2559 West Place'),
 (10, '74 Valley Edge Road'),

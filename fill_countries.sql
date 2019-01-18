@@ -1,3 +1,5 @@
+delete from Country
+DBCC CHECKIDENT (Country, RESEED, 0)
 insert into Country (name)
 values
 ('Poland'),
@@ -5,3 +7,5 @@ values
 ('Czech Republic'),
 ('Russia'),
 ('Ukraine');
+
+select * from Country

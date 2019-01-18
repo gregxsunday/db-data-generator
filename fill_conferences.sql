@@ -1,3 +1,4 @@
+DBCC CHECKIDENT (Conferences, RESEED, 0)
 INSERT INTO Conferences (Address_id, name, date_begin, date_end, cost, maximumParticipants, studentDiscount)
 VALUES
 (39, 'ActionScript Conference', CAST('2019-01-01 08:00:00' AS smalldatetime), CAST('2019-01-03 18:00:00' AS smalldatetime), 340, 200, 0.5),
@@ -10,7 +11,7 @@ VALUES
 (36, 'BeanShell Conference', CAST('2019-04-09 09:00:00' AS smalldatetime), CAST('2019-04-11 18:00:00' AS smalldatetime), 120, 260, 0.5),
 (25, 'Bug Conference', CAST('2019-04-22 09:00:00' AS smalldatetime), CAST('2019-04-23 18:00:00' AS smalldatetime), 820, 290, 0.7),
 (32, 'C Conference', CAST('2019-05-07 10:00:00' AS smalldatetime), CAST('2019-05-08 18:00:00' AS smalldatetime), 840, 150, 0.5),
-(0, 'C# Conference', CAST('2019-05-20 09:00:00' AS smalldatetime), CAST('2019-05-22 17:00:00' AS smalldatetime), 820, 160, 0.8),
+(1, 'C# Conference', CAST('2019-05-20 09:00:00' AS smalldatetime), CAST('2019-05-22 17:00:00' AS smalldatetime), 820, 160, 0.8),
 (17, 'C++ Conference', CAST('2019-06-03 10:00:00' AS smalldatetime), CAST('2019-06-04 20:00:00' AS smalldatetime), 860, 160, 0.7),
 (30, 'Clojure Conference', CAST('2019-06-19 10:00:00' AS smalldatetime), CAST('2019-06-20 20:00:00' AS smalldatetime), 590, 270, 0.6),
 (14, 'COBOL Conference', CAST('2019-07-01 10:00:00' AS smalldatetime), CAST('2019-07-02 18:00:00' AS smalldatetime), 790, 150, 0.8),
@@ -42,7 +43,7 @@ VALUES
 (29, 'LiveScript Conference', CAST('2020-07-01 08:00:00' AS smalldatetime), CAST('2020-07-03 16:00:00' AS smalldatetime), 410, 150, 0.5),
 (4, 'LOGO Conference', CAST('2020-07-15 10:00:00' AS smalldatetime), CAST('2020-07-17 18:00:00' AS smalldatetime), 760, 100, 0.7),
 (3, 'Lua Conference', CAST('2020-07-29 10:00:00' AS smalldatetime), CAST('2020-07-31 18:00:00' AS smalldatetime), 260, 170, 0.6),
-(0, 'MACLISP Conference', CAST('2020-08-11 09:00:00' AS smalldatetime), CAST('2020-08-13 18:00:00' AS smalldatetime), 880, 210, 0.7),
+(1, 'MACLISP Conference', CAST('2020-08-11 09:00:00' AS smalldatetime), CAST('2020-08-13 18:00:00' AS smalldatetime), 880, 210, 0.7),
 (31, 'Matlab Conference', CAST('2020-08-24 10:00:00' AS smalldatetime), CAST('2020-08-25 19:00:00' AS smalldatetime), 150, 160, 0.8),
 (12, 'MUMPS Conference', CAST('2020-09-09 09:00:00' AS smalldatetime), CAST('2020-09-11 18:00:00' AS smalldatetime), 580, 280, 0.5),
 (4, 'Objective-C Conference', CAST('2020-09-22 08:00:00' AS smalldatetime), CAST('2020-09-24 16:00:00' AS smalldatetime), 590, 200, 0.8),
@@ -78,4 +79,4 @@ VALUES
 (15, 'XML Conference', CAST('2021-11-16 09:00:00' AS smalldatetime), CAST('2021-11-17 17:00:00' AS smalldatetime), 710, 280, 0.8),
 (32, 'XSS Conference', CAST('2021-11-30 09:00:00' AS smalldatetime), CAST('2021-12-01 17:00:00' AS smalldatetime), 960, 260, 0.7),
 (12, 'YAML Conference', CAST('2021-12-13 09:00:00' AS smalldatetime), CAST('2021-12-15 17:00:00' AS smalldatetime), 560, 100, 0.8),
-(34, 'ZetaLisp Conference', CAST('2021-12-29 09:00:00' AS smalldatetime), CAST('2021-12-30 19:00:00' AS smalldatetime), 590, 110, 0.8),
+(34, 'ZetaLisp Conference', CAST('2021-12-29 09:00:00' AS smalldatetime), CAST('2021-12-30 19:00:00' AS smalldatetime), 590, 110, 0.8);

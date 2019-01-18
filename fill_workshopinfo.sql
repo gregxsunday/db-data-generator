@@ -1,3 +1,4 @@
+DBCC CHECKIDENT (Workshopinformation, RESEED, 0)
 INSERT INTO Workshopinformation (name, description, maximumParticipants)
 VALUES
 ( 'ActionScript Entry-level', 'Lorem ipsum dolor sit amet.', 20),
@@ -315,4 +316,4 @@ VALUES
 ( 'ZetaLisp Entry-level', 'Lorem ipsum dolor sit amet.', 10),
 ( 'ZetaLisp Beginner', 'Lorem ipsum dolor sit amet.', 10),
 ( 'ZetaLisp Advanced', 'Lorem ipsum dolor sit amet.', 20),
-( 'ZetaLisp Master', 'Lorem ipsum dolor sit amet.', 20),
+( 'ZetaLisp Master', 'Lorem ipsum dolor sit amet.', 20);
