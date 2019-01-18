@@ -73,6 +73,25 @@ class Reservation():
             return '(' + str(self.client_id) + ', null, CAST(\'' + str(self.reservation_date) + '\' AS smalldatetime),'
         return '(' + str(self.client_id) + ', ' + 'CAST(\'' + str(self.payment_date) + '\' AS smalldatetime), CAST(\'' + str(self.reservation_date) + '\' AS smalldatetime),'
 
+class ConfReservation():
+    def __init__(self, id, reserv_id, cd_id, students, normalParts):
+        self.id = id
+        self.reservation_id = reserv_id
+        self.conferenceday_id = cd_id
+        self.students = students
+        self.normalParticipants = normalParts
+
+    def __str__(self):
+        return '( ' + str(self.reservation_id) + ', ' + str(self.conferenceday_id) + ', ' + str(self.students) + ', ' + str(self.normalParticipants) + '),'
+
+class ConfParticipant():
+    def __init__(self, id, conf_reservation_id):
+        self.id = id
+        self.confReservation_id = conf_reservation_id
+
+    def __str__(self):
+        return '(' + str(self.id) + ', ' + str(self.confReservation_id) + '),'
+
 def generate_conferences():
     conferences = []
     with open('conf_names', 'r') as infile:
@@ -156,6 +175,26 @@ def generate_reservation(id, conf, conf_day):
         id += 1
     return reservations, id
 
+def generate_conf_reservation(id, reservation, cd_id):
+    if reservation.client_id % 3 == 2:
+        students = randint(0, 10)
+        normalParts = randint(0, 10)
+    else:
+        students = randint(0, 1)
+        normalParts = 1 - students
+    cd = ConfReservation(id, reservation.id, cd_id, students, normalParts)
+    return cd, id + 1
+
+def generate_confParticipant(reservation, confReservation):
+    confParticipants = []
+    if confReservation.students + confReservation.normalParticipants == 1:
+        confParticipants.append(ConfParticipant(reservation.client_id, confReservation.id))
+        return confParticipants
+    for i in range(confReservation.students):
+        confParticipants.append(ConfParticipant(randint(1, 333)*3, confReservation.id))
+    for i in range(confReservation.normalParticipants):
+        confParticipants.append(ConfParticipant(randint(1, 333)*3 + 1, confReservation.id))
+    return confParticipants
 
 def generate():
     confs = generate_conferences()
@@ -165,47 +204,57 @@ def generate():
             for w in generate_workshop_info(0, c.name):
                 out.write(str(w) + '\n')
 
-    with open('fill_conferences.sql', 'w') as out_confs:
-        out_confs.write('INSERT INTO Conferences (Address_id, name, date_begin, date_end, cost, maximumParticipants, studentDiscount)\nVALUES\n')
-        with open('fill_discounts.sql', 'w') as out_discounts:
-            out_discounts.write('INSERT INTO CostDiscount (Conference_id, discount, date_begin, date_end)\nVALUES\n')
-            with open('fill_days.sql', 'w') as out_days:
-                out_days.write('INSERT INTO ConferenceDay (Conferences_id, day)\nVALUES\n')
-                with open('fill_workshops.sql', 'w') as out_workshops:
-                    out_workshops.write('INSERT INTO Workshop (Workshopinformation_id, ConferenceDay_id, date_begin, date_end, cost)\nVALUES\n')
-                    with open('fill_reservations.sql', 'w') as out_reservations:
-                        out_reservations.write('INSERT INTO Reservation (Client_id, paymentDate, reservationDate)\nVALUES\n')
-                        disc_id = 0
-                        days_id = 0
-                        workshop_id = 0
-                        reservation_id = 0
-                        for c in confs:
+    out_confs = open('fill_conferences.sql', 'w')
+    out_confs.write('INSERT INTO Conferences (Address_id, name, date_begin, date_end, cost, maximumParticipants, studentDiscount)\nVALUES\n')
+    out_discounts = open('fill_discounts.sql', 'w')
+    out_discounts.write('INSERT INTO CostDiscount (Conference_id, discount, date_begin, date_end)\nVALUES\n')
+    out_days = open('fill_days.sql', 'w')
+    out_days.write('INSERT INTO ConferenceDay (Conferences_id, day)\nVALUES\n')
+    out_workshops = open('fill_workshops.sql', 'w')
+    out_workshops.write('INSERT INTO Workshop (Workshopinformation_id, ConferenceDay_id, date_begin, date_end, cost)\nVALUES\n')
+    out_reservations = open('fill_reservations.sql', 'w')
+    out_reservations.write('INSERT INTO Reservation (Client_id, paymentDate, reservationDate)\nVALUES\n')
+    out_conferencereservations = open('fill_conferencereservations.sql', 'w')
+    out_conferencereservations.write('INSERT INTO ConferenceReservation (Reservation_id, ConferenceDay_id, students, normalParticipants)\nVALUES\n')
+    out_conferenceparticipants = open('fill_confParticipants.sql', 'w')
+    out_conferenceparticipants.write('INSERT INTO ConferenceParticipant (id, ConferenceReservation_id)\nVALUES\n')
 
-                            discounts, disc_id = generate_discounts(disc_id, c)
-                            days, days_id = generate_conf_days(days_id, c)
-                            out_confs.write(str(c) + '\n')
-                            for d in discounts:
-                                out_discounts.write(str(d) + '\n')
-                            for d in days:
-                                out_days.write(str(d) + '\n')
-                                workshops, workshop_id = generate_workshop(workshop_id, c, d)
-                                reservations, reservation_id = generate_reservation(reservation_id, c, d)
-                                for r in reservations:
-                                    out_reservations.write(str(r) + '\n')
-                                for w in workshops:
-                                    out_workshops.write(str(w)+ '\n')
+    disc_id = 0
+    days_id = 0
+    workshop_id = 0
+    reservation_id = 0
+    confday_id = 0
+    for c in confs:
+        discounts, disc_id = generate_discounts(disc_id, c)
+        days, days_id = generate_conf_days(days_id, c)
+        out_confs.write(str(c) + '\n')
+        for d in discounts:
+            out_discounts.write(str(d) + '\n')
+        for d in days:
+            out_days.write(str(d) + '\n')
+            workshops, workshop_id = generate_workshop(workshop_id, c, d)
+            reservations, reservation_id = generate_reservation(reservation_id, c, d)
+            for r in reservations:
+                out_reservations.write(str(r) + '\n')
+                cd, confday_id = generate_conf_reservation(confday_id, r, d.id)
+                confParts = generate_confParticipant(r, cd)
+                for cp in confParts:
+                    out_conferenceparticipants.write(str(cp) + '\n')
+                out_conferencereservations.write(str(cd) + '\n')
+            for w in workshops:
+                out_workshops.write(str(w)+ '\n')
 
 if __name__ == "__main__":
-    # with open('fill_student.sql', 'w') as out_student:
-    #     out_student.write('INSERT INTO Student (id, cardNumber)\nVALUES\n')
-    #     for i in range(0, 1000, 3):
-    #         out_student.write('( ' + str(randint(100000, 999999)) + '),\n')
+    with open('fill_student.sql', 'w') as out_student:
+        out_student.write('INSERT INTO Student (id, cardNumber)\nVALUES\n')
+        for i in range(0, 1000, 3):
+            out_student.write('( ' + str(i) + ', ' + str(randint(100000, 999999)) + '),\n')
     with open('fill_individual.sql', 'w') as out_ind:
         out_ind.write('INSERT INTO InfividualParticipant (id, additionalinformation)\nVALUES\n')
         for i in range(1, 1000, 3):
-            out_ind.write('( ' + '\'Lorem ipsum dolor sit amet.\'),\n')
-    # with open('fill_cmp.sql', 'w') as out_cmp:
-    #     out_cmp.write('INSERT INTO CompanyParticipant (id, Company_id)\nVALUES\n')
-    #     for i in range(2, 1000, 3):
-    #         out_cmp.write('( ' + str(i) + ', ' + str(randint(1, 100)) + '),\n')
+            out_ind.write('( ' + str(i) + ', \'Lorem ipsum dolor sit amet.\'),\n')
+    with open('fill_cmp.sql', 'w') as out_cmp:
+        out_cmp.write('INSERT INTO CompanyParticipant (id, Company_id)\nVALUES\n')
+        for i in range(2, 1000, 3):
+            out_cmp.write('( ' + str(i) + ', ' + str(randint(1, 100)) + '),\n')
     generate()
