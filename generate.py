@@ -3,7 +3,7 @@ from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
 from random import randint
-
+from math import floor
 
 class Conference:
     def __init__(self, id, addr_id, name, date_begin, date_end, cost, max_participants, student_discount):
@@ -91,6 +91,25 @@ class ConfParticipant():
 
     def __str__(self):
         return '(' + str(self.id) + ', ' + str(self.confReservation_id) + '),'
+
+class WorkshopReservation():
+    def __init__(self, id, conf_reserv_id, workshop_id, students, normalParts):
+        self.id = id
+        self.confReservation_id = conf_reserv_id
+        self.workshop_id = workshop_id
+        self.students = students
+        self.normalParticipants = normalParts
+
+    def __str__(self):
+        return '( ' + str(self.confReservation_id) + ', ' + str(self.workshop_id) + ', ' + str(self.students) + ', ' + str(self.normalParticipants) + '),'
+
+class WkshopParticipant():
+    def __init__(self, id, wk_id):
+        self.id = id
+        self.wkshopReservation_id = wk_id
+
+    def __str__(self):
+        return '(' + str(self.id) + ', ' + str(self.wkshopReservation_id) + '),'
 
 def generate_conferences():
     conferences = []
@@ -196,6 +215,21 @@ def generate_confParticipant(reservation, confReservation):
         confParticipants.append(ConfParticipant(randint(1, 333)*3 + 1, confReservation.id))
     return confParticipants
 
+def generate_wkshop_reservation(confReservation, workshop_id):
+    if confReservation.students + confReservation.normalParticipants == 1 and randint(1, 10) == 1:
+        wkshop_id = randint(workshop_id - 4, workshop_id - 1)
+        return (WorkshopReservation(0, confReservation.id, wkshop_id, confReservation.students, confReservation.normalParticipants))
+    students = int(confReservation.students*0.1)
+    normalParts = int(confReservation.normalParticipants*0.1)
+    wkshop_id = randint(workshop_id - 4, workshop_id - 1)
+    return (WorkshopReservation(0, confReservation.id, wkshop_id, students,normalParts))
+
+# def generate_wkshopParticipant(reservation, wkshopReservation):
+#     if wkshopReservation.students == 1:
+#         id = randint(1,333)*3
+#         return WkshopParticipant(id, wkshopReservation.id)
+#     return confParticipants
+
 def generate():
     confs = generate_conferences()
     with open('fill_workshopinfo.sql', 'w') as out:
@@ -218,6 +252,8 @@ def generate():
     out_conferencereservations.write('INSERT INTO ConferenceReservation (Reservation_id, ConferenceDay_id, students, normalParticipants)\nVALUES\n')
     out_conferenceparticipants = open('fill_confParticipants.sql', 'w')
     out_conferenceparticipants.write('INSERT INTO ConferenceParticipant (id, ConferenceReservation_id)\nVALUES\n')
+    out_wkshop_reserv = open('fill_wkshopReservation.sql', 'w')
+    out_wkshop_reserv.write('INSERT INTO WorkshopReservation (ConferenceReservation_id, Workshop_id, students, normalParitcipants)\nVALUES\n')
 
     disc_id = 0
     days_id = 0
@@ -237,6 +273,9 @@ def generate():
             for r in reservations:
                 out_reservations.write(str(r) + '\n')
                 cd, confday_id = generate_conf_reservation(confday_id, r, d.id)
+                wkshopReservation = generate_wkshop_reservation(cd, workshop_id)
+                if wkshopReservation.students + wkshopReservation.normalParticipants > 0:
+                    out_wkshop_reserv.write(str(wkshopReservation) + '\n')
                 confParts = generate_confParticipant(r, cd)
                 for cp in confParts:
                     out_conferenceparticipants.write(str(cp) + '\n')
